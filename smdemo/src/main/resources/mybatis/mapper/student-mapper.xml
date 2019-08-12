@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.ougen.smdemo.mapper.StudentMapper">
+    <!--<cache></cache>-->
+    <resultMap id="studentteach" type="student">
+        <id property="studentId" column="student_id"></id>
+        <result property="studentName" column="student_name"></result>
+        <collection property="teacher_list" ofType="teacher"
+                    select="getTeacher" column="student_id">
+            <id property="teacherId" column="teacher_id"></id>
+            <result property="teacherName" column="teacher_name"></result>
+        </collection>
+    </resultMap>
+    <resultMap id="studentall" type="student">
+        <id property="studentId" column="student_id"></id>
+        <result property="studentName" column="student_name"></result>
+        <collection property="teacher_list" ofType="teacher">
+            <id property="teacherId" column="teacher_id"></id>
+            <result property="teacherName" column="teacher_name"></result>
+        </collection>
+    </resultMap>
+    <select id="getAll" resultMap="studentall">
+        select * from
+        student s,teacher t,student_teacher st
+        where
+        s.student_id=st.student_id
+        and
+        t.teacher_id=st.teacher_id
+    </select>
+
+    <select id="getOne" resultMap="studentteach" parameterType="int">
+        select * from
+        student
+        where
+        student_id=#{studentId}
+    </select>
+
+    <select id="getTeacher" parameterType="int" resultType="teacher">
+        select t.teacher_id ,t.teacher_name from
+        teacher t
+        left join
+        student_teacher st
+        on t.teacher_id=st.teacher_id
+        where
+        st.student_id=#{studentId}
+    </select>
+    <!---->
+</mapper>

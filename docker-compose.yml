@@ -1,0 +1,17 @@
+version: "3"
+services:
+  mysql: 
+    container_name: mysql3
+    build: ./smdemo/docker/mysql/
+    environment: 
+      - MYSQL_ROOT_PASSWORD=mysql123
+    expose: 
+      - "3306"
+    volumes: 
+      - /data/docker/mysql:/var/lib/mysql
+  bootdemo:
+    container_name: bootdemo
+    build: ./smdemo/docker/java/
+    environment: 
+      - PORT=3306
+      - HOST=192.168.43.201
